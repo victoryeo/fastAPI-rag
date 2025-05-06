@@ -14,6 +14,7 @@ from langsmith import Client
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
+from validation import QueryInput
 
 load_dotenv()
 
@@ -68,6 +69,8 @@ def build_vector_store():
     vector_store_ready = True
 
 def answer_query(query):
+    # Validate the query using QueryInput
+    QueryInput(question=query)
     # Define prompt for question-answering
     #client = Client(api_key=os.getenv("LANGSMITH_API_KEY"))
     #prompt = client.pull_prompt("rlm/rag-prompt", include_model=True)
