@@ -61,4 +61,4 @@ def read_root():
 def chat(request: ChatRequest):
     result = answer_query(request.question)
     print(result)
-    return {"answer": result["answer"].content} 
+    return {"answer": result["answer"]} 

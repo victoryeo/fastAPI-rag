@@ -15,6 +15,7 @@ from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from validation import QueryInput
+from pydantic import ValidationError
 
 load_dotenv()
 
@@ -69,8 +70,13 @@ def build_vector_store():
     vector_store_ready = True
 
 def answer_query(query):
-    # Validate the query using QueryInput
-    user_input =QueryInput(question=query)
+    try:
+        user_input = QueryInput(question=query)
+    except ValidationError as e:
+        result = {}
+        result["answer"] = str(e)
+        result["sources"] = 'Validation'
+        return result
     # Define prompt for question-answering
     #client = Client(api_key=os.getenv("LANGSMITH_API_KEY"))
     #prompt = client.pull_prompt("rlm/rag-prompt", include_model=True)
@@ -104,7 +110,12 @@ def answer_query(query):
     response = graph.invoke({"question": user_input.question})
     print(response["answer"])
     result = {}
-    result["answer"] = response["answer"]
+    # Extract 'content' if present
+    answer = response["answer"]
+    if hasattr(answer, 'content'):
+        result["answer"] = answer.content
+    else:
+        result["answer"] = answer
     result["sources"] = 'LLMBot'
 
     return result
