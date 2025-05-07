@@ -70,7 +70,7 @@ def build_vector_store():
 
 def answer_query(query):
     # Validate the query using QueryInput
-    QueryInput(question=query)
+    user_input =QueryInput(question=query)
     # Define prompt for question-answering
     #client = Client(api_key=os.getenv("LANGSMITH_API_KEY"))
     #prompt = client.pull_prompt("rlm/rag-prompt", include_model=True)
@@ -99,9 +99,9 @@ def answer_query(query):
     # Compile application 
     graph = graph_builder.compile()
 
-    print("query", query)
+    print("query", user_input.question)
     # invoke using langgraph
-    response = graph.invoke({"question": query})
+    response = graph.invoke({"question": user_input.question})
     print(response["answer"])
     result = {}
     result["answer"] = response["answer"]
