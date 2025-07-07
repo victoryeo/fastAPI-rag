@@ -19,6 +19,8 @@ from pydantic import ValidationError
 
 load_dotenv()
 
+os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
+
 print("token",os.getenv("GROQ_API_KEY"))
 
 # Define state for application
